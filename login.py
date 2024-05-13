@@ -5,10 +5,10 @@ from imagenes import *
 from BD_inicio_sesion_sql import *
 from registro import Registro 
 class Login:
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.ventana = Tk()
-        self.ventana.title("Inicio de sesión")
-        
+        self.ventana.title("Inicio de sesión prubea")
         # Obtener dimensiones de la pantalla
         ancho_pantalla = self.ventana.winfo_screenwidth()
         alto_pantalla = self.ventana.winfo_screenheight()
@@ -133,6 +133,5 @@ class Login:
         
     def VentanaRegistrar(self):
         self.ventana.withdraw()
-        self.ventana.destroy()
-        Registro(self.ventana).ventana.deiconify()
+        Registro(self.ventana)
 Login()

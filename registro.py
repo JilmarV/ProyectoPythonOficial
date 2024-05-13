@@ -1,25 +1,12 @@
-
 from tkinter import *
 from tkinter import messagebox
-from BD_admin_usuario_sql import *
 from PIL import Image, ImageTk
-class Registro:
-    def __init__(self,ventana_Login:Tk):
-        self.ventana = Tk()
-        self.ventanaLogin = ventana_Login
-        # Obtener dimensiones de la pantalla
-        ancho_pantalla = self.ventana.winfo_screenwidth()
-        alto_pantalla = self.ventana.winfo_screenheight()
-        # Dimensiones de la ventana
-        ancho_ventana = 500
-        alto_ventana = 700
-        
-        x = (ancho_pantalla // 2) - (ancho_ventana // 2)
-        y = (alto_pantalla // 2) - (alto_ventana // 2)
-        self.ventana.geometry(f"{ancho_ventana}x{alto_ventana}+{x}+{y}")
-        self.ventana.title("Registro de usuario")
-        self.ventana.positionfrom
-        
+from BD_admin_usuario_sql import *
+
+class Registro(Toplevel):
+    def __init__(self, ventana_padre, *args, **kwargs):
+        super().__init__(ventana_padre)
+        self.title("Registro de usuario")
         fondo = "#01172F"
         color_boton = "#08A4BD"
         color_boton_secundario = "#00635D"
@@ -28,17 +15,16 @@ class Registro:
         #       parte frames
         #--------------------------------
         
-        self.frame_superior = Frame(self.ventana)
+        self.frame_superior = Frame(self)
         self.frame_superior.configure(bg=fondo)
         self.frame_superior.pack(fill="both", expand=True)
         
-        self.frame_inferior = Frame(self.ventana)
+        self.frame_inferior = Frame(self)
         self.frame_inferior.configure(bg = fondo)
         self.frame_inferior.pack(fill="both", expand=True)
         self.frame_inferior.columnconfigure(0, weight=1)
         self.frame_inferior.columnconfigure(1, weight=1)
 
-                
         #--------------------------------
         #       parte del titulo
         #--------------------------------
@@ -54,7 +40,7 @@ class Registro:
         #       parte de imagenes
         #--------------------------------
         
-        self.img = Image.open("imagenes/user_icon_124042.png")
+        self.img = Image.open("imagenes/copia.png")
         self.img = self.img.resize((150, 150))
         self.render = ImageTk.PhotoImage(self.img)
         self.label_imagen = Label(self.frame_superior, image=self.render, bg=fondo)
@@ -149,14 +135,22 @@ class Registro:
                                           background = color_boton_secundario,command=self.atras)
         self.boton_atras.grid(row = 5, column = 1, columnspan = 1, pady = 35)
         
-        self.ventana.mainloop()
-        
+    def limpiar(self):
+        self.nombre.set("")
+        self.apellido.set("")
+        self.correo.set("")
+        self.contrasena.set("")
+        self.direccion.set("")
     def registrase(self):
         res = insertarUsuario((self.nombre.get(),self.apellido.get(),self.correo.get(),self.contrasena.get(),self.direccion.get()))
         if(res == True):
             messagebox.showinfo("Aun no sirve", "Se ha registrado el usuario") 
+            self.limpiar()
         else:
             messagebox.showinfo("Aun no sirve", "No Se ha registrado el usuario") 
+
     def atras(self):
-        self.ventana.withdraw
-        self.ventanaLogin.deiconify()
+        self.destroy()
+        ventanaInicio = self.master
+        ventanaInicio.deiconify()
+

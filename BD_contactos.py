@@ -1,4 +1,4 @@
-from conexionsql import Conexion
+from BD_conexionsql import Conexion
 
 # CRUD DEL CONTACTO
 def insertarContacto(datos):

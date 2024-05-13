@@ -23,3 +23,28 @@ def borrarUsuario(id):
     cursor.execute(sql, (id))
     conexion.commit()
     conexion.close()
+
+def modificarUsuario(id_usuario, nombre, apellido, correo, contrasena, direccion):
+    conexion, cursor = Conexion.conectar()
+    sql = """
+        UPDATE usuario 
+        SET nombre_usuario = ?, 
+            apellido_usuario = ?, 
+            correo_electronico = ?, 
+            contrasena = ?, 
+            direccion = ? 
+        WHERE id_usuario = ?
+    """
+    cursor.execute(sql, (nombre, apellido, correo, contrasena, direccion, id_usuario))
+    conexion.commit()
+    conexion.close()
+
+def consultarUsuarios():
+    conexion, cursor = Conexion.conectar()
+    sql = "SELECT id_usuario, nombre_usuario, apellido_usuario, correo_electronico, direccion FROM usuario"
+    cursor.execute(sql)
+    listado = []
+    for fila in cursor:
+        listado.append(fila)    
+    conexion.close()
+    return listado

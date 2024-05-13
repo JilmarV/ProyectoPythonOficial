@@ -1,4 +1,4 @@
-from conexionsql import Conexion
+from BD_conexionsql import Conexion
 
 #-------------------------------------------------------------------------------------------------------------------------------------
 def crearTablaContactos():
@@ -24,7 +24,7 @@ def crearTablaUsuarios():
     sql = """    
         CREATE TABLE IF NOT EXISTS usuario(
             id_usuario INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            nombre_usuario NOT NULL,
+            nombre_usuario  VARCHAR (20)NOT NULL,
             apellido_usuario VARCHAR(60) NOT NULL,
             correo_electronico VARCHAR(20) UNIQUE NOT NULL,
             contrasena VARCHAR(20) NOT NULL,
@@ -98,5 +98,6 @@ def crearTablaCategoriaPorContacto():
         print("No se pudo crear la tabla de categorias_por_contacto")
     conexion.close()
 
-
+crearTablaContactos()
+crearTablaUsuarios()
 #--------------------------------------------------------------------------------------------------------------------------

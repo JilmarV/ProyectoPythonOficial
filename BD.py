@@ -30,7 +30,6 @@ def crearTablaUsuarios():
             id_usuario INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
             nombre_usuario NOT NULL,
             apellido_usuario VARCHAR(60) NOT NULL,
-            apellido_usuario VARCHAR(60) NOT NULL,
             correo_electronico VARCHAR(20) UNIQUE NOT NULL,
             contrasena VARCHAR(20) NOT NULL,
             direccion VARCHAR(20) NOT NULL
@@ -176,6 +175,38 @@ def insertarCategoria(datos):
         print("No se pudieron guardar los datos  del usuario")
     conexion.commit()
     conexion.close()
+#INICIO DE SESION 
+""" # public int selectLogin(String email, String password) {
+        int resultado = 0;
+        // We prepare the consultation SQL for select data
+        String selectSQL = "SELECT * FROM users Where email=? AND password_user=?";
+        try (PreparedStatement pstmt = connection.prepareStatement(selectSQL)) {
+            pstmt.setString(2, password);
+            pstmt.setString(1, email);
+"""
+def iniciarSesion(correo, contrasena):
+    conexion, cursor = conectar()
+    sql = "SELECT id_usuario FROM usuario WHERE correo_electronico = ? AND contrasena = ?"
+    cursor.execute(sql, (correo, contrasena))
+    usuario = cursor.fetchone()  # Obtiene el primer resultado
+
+    if usuario:
+        id_usuario = usuario[0]  # El ID está en la primera columna
+        print("Inicio de sesión exitoso")
+        return id_usuario
+    else:
+        print("Correo electrónico o contraseña incorrectos")
+        return None
 ##QUEMAR ARCHIVOS 
-nombre_categoria = "OTROS"
+""" nombre_categoria = "FAVORITOS"
+crearTablaCategoria()
 insertarCategoria((nombre_categoria,))
+ """
+
+""" nombreUser = "ewfwfe"
+apellido = "regverg"
+correo = "admin"
+contrasena = "admin"
+direccion = "admwefwfewin"
+crearTablaUsuarios()
+insertarUsuario((nombreUser,apellido,correo,contrasena,direccion)) """

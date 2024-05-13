@@ -1,13 +1,12 @@
 from tkinter import *
 from tkinter import messagebox
-
+from tkinter import messagebox
+from BD import *
 from PIL import Image, ImageTk
 
 class Login:
     def __init__(self):
-        
         self.ventana = Tk()
-        
         # Obtener dimensiones de la pantalla
         ancho_pantalla = self.ventana.winfo_screenwidth()
         alto_pantalla = self.ventana.winfo_screenheight()
@@ -62,7 +61,8 @@ class Login:
         #--------------------------------
         #       parte de las imagenes
         #--------------------------------
-        
+        self.correo = StringVar()
+        self.contrasena= StringVar()
         self.label_correo_electronico = Label(self.frame_inferior,
                                               text = "Correo electrónico:",
                                               font = ("Arial", 15),
@@ -73,7 +73,7 @@ class Login:
         self.entry_correo_electronico = Entry(self.frame_inferior,
                                                    bd = 0,
                                                    width = 20,
-                                                   font = ("Arial", 15))
+                                                   font = ("Arial", 15),textvariable=self.correo)
         self.entry_correo_electronico.grid(row = 0, column = 1, columnspan = 3, padx = 10, sticky = "w")
         
         self.label_contrasena = Label(self.frame_inferior,
@@ -87,7 +87,7 @@ class Login:
                                                    bd = 0,
                                                    width = 20,
                                                    font = ("Arial", 15),
-                                                   show = "•")
+                                                   show = "•",textvariable=self.contrasena)
         self.entry_contrasena.grid(row = 1, column = 1, columnspan = 3, padx = 10, sticky = "w")
         
         self.boton_inicio_sesion = Button(self.frame_inferior,
@@ -102,23 +102,28 @@ class Login:
                                           text = "Registrarse",
                                           width = 15,
                                           font = ("Arial", 15),
-                                          background = color_boton,
-                                          command = self.registrase)
+                                          background = color_boton
+                                          )
         self.boton_registrarse.grid(row = 3, column = 0, columnspan = 2, pady = 10)
-        
         self.ventana.mainloop()
-    
-    def inicio_sesion(self):
-        correo_electronico = self.entry_correo_electronico.get()
-        contrasena = self.entry_contrasena.get()
-        
-        if correo_electronico == "usuario@" and contrasena == "123" :
-            messagebox.showinfo("Acceso correcto", "felicidades shinji (❤️ ω ❤️)")
-        else :
-            messagebox.showinfo("Acceso incorrecto", "la cagaste shinji (┬┬﹏┬┬)")
-    
-    def registrase(self):
-        mensaje = "Aun no sirve shinji\n\n┗( T﹏T )┛"
-        messagebox.showinfo("Aun no sirve shinji", mensaje)
+        # METODOS DE INICIO DE SESION
+    def mostrarMensaje(self, titulo, mensaje):
+            messagebox.showinfo(titulo, mensaje)
 
+    def limpiar(self):
+        self.correo.set("")
+        self.contrasena.set("")
+        
+    def inicio_sesion(self):
+        if self.correo.get() == "" or self.contrasena.get() == "":
+            self.mostrarMensaje("ERROR", "Debes rellenar Los datos")
+        else:
+            id_usuario = iniciarSesion(self.correo.get(), self.contrasena.get())
+            if id_usuario is not None:
+                print("Inicio de sesión exitoso")
+                self.limpiar()
+            else:
+                print("Usuario no encontrado")
+                self.limpiar()
+    
 Login()

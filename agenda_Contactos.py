@@ -12,7 +12,10 @@ class agenda(Toplevel):
         self.anchoAlto = str(self.ANCHO) + "x" + str(self.ALTO)
         self.posicionX = "+" + str(self.POSX)
         self.posicionY = "+" + str(self.POSY)
-        self.colorVentana = "blue"
+        
+        self.colorVentana = "#01172F"
+        self.color_boton = "#08A4BD"
+        self.color_boton_secundario = "#00635D"
 
         self.config(bg=self.colorVentana)
         self.geometry(self.anchoAlto + self.posicionX + self.posicionY)
@@ -43,10 +46,10 @@ class agenda(Toplevel):
         self.text = Text(self.frame)
         self.text.place(x=50, y=240, width=500, height=200)
 
-        botonAñadir = Button(self.frame, text="Añadir", command=self.guardarDatos).place(x=150, y=500)
-        botonBorrar = Button(self.frame, text="Borrar", command=self.borrar_registro).place(x=200, y=500)
-        botonConsultar = Button(self.frame, text="Consultar", command=self.mostrar).place(x=250, y=500)
-        botonModificar = Button(self.frame, text="Actualizar", command=self.actualizar).place(x=320, y=500)
+        botonAñadir = Button(self.frame, text="Añadir", command=self.guardarDatos, background=self.color_boton).place(x=150, y=500)
+        botonBorrar = Button(self.frame, text="Borrar", command=self.borrar_registro, background=self.color_boton).place(x=200, y=500)
+        botonConsultar = Button(self.frame, text="Consultar", command=self.mostrar, background=self.color_boton).place(x=250, y=500)
+        botonModificar = Button(self.frame, text="Actualizar", command=self.actualizar, background=self.color_boton).place(x=320, y=500)
 
 
     def mostrarMensaje(titulo, mensaje):
@@ -106,14 +109,3 @@ class agenda(Toplevel):
             self.text.insert(INSERT, "\t")
             self.text.insert(INSERT, email_)
             self.text.insert(INSERT, "\n")
-
-
-
-
-
-
-
-
-
-
-

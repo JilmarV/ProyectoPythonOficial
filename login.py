@@ -1,9 +1,10 @@
 from tkinter import *
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 from PIL import Image, ImageTk
 from imagenes import *
 from BD_inicio_sesion_sql import *
 from registro import Registro 
+from ventana_admin import ventana_admin
 class Login:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -125,6 +126,10 @@ class Login:
     def inicio_sesion(self):
         if self.correo.get() == "" or self.contrasena.get() == "":
             self.mostrarMensaje("ERROR", "Debes rellenar los datos")
+        elif self.correo.get() == "admin" or self.contrasena.get() == "admin":
+            self.mostrarMensaje("Inicio de sesión", "Inicio sesion")
+            self.limpiar()
+            self.Ventana_admin()
         else:    
             usuario = iniciarSesion(self.correo.get(),self.contrasena.get())
             if usuario is not None:
@@ -134,4 +139,8 @@ class Login:
     def VentanaRegistrar(self):
         self.ventana.withdraw()
         Registro(self.ventana)
+        
+    def Ventana_admin(self):
+        self.ventana.withdraw()
+        ventana_admin(self.ventana)
 Login()

@@ -136,8 +136,7 @@ class Login:
             if usuario is not None:
                 self.mostrarMensaje("Inicio de sesión", "Inicio sesion")
                 self.ventana.withdraw()
-                str(usuario)
-                agenda(usuario,self.ventana,)
+                agenda(usuario,self.ventana)
                 
         
     def VentanaRegistrar(self):

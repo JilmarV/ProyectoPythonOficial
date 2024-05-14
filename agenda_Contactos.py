@@ -3,15 +3,15 @@ from tkinter import messagebox
 from BD import *
 class agenda(Toplevel):
     def __init__(self,id, ventana_padre, *args, **kwargs):
-        super().__init__(ventana_padre,id)
+        super().__init__(ventana_padre)
         self.id_usuario = id
-        ANCHO = 560
-        ALTO = 540
-        POSX = 400
-        POSY = 400
-        self.anchoAlto = str(ANCHO) + "x" + str(ALTO)
-        self.posicionX = "+" + str(POSX)
-        self.posicionY = "+" + str(POSY)
+        self.ANCHO = 560
+        self.ALTO = 540
+        self.POSX = 400
+        self.POSY = 400
+        self.anchoAlto = str(self.ANCHO) + "x" + str(self.ALTO)
+        self.posicionX = "+" + str(self.POSX)
+        self.posicionY = "+" + str(self.POSY)
         self.colorVentana = "blue"
 
         self.config(bg=self.colorVentana)
@@ -19,7 +19,7 @@ class agenda(Toplevel):
         self.title("Agenda")
 
         self.frame = Frame(self)
-        self.frame.config(width=ANCHO, height=ALTO, bg="darkblue")
+        self.frame.config(width=self.ANCHO, height=self.ALTO, bg="darkblue")
         self.frame.pack()
 
         self.ID = IntVar()
@@ -30,6 +30,7 @@ class agenda(Toplevel):
 
         self.etiquetaID = Label(self.frame, text="ID: ").place(x=50, y=50)
         self.cajaID = Entry(self.frame, textvariable=self.ID).place(x=130, y=50)
+        self.ID.set(str(self.id_usuario))
         self.etiquetaNombre = Label(self.frame, text="Nombre: ").place(x=50, y=90)
         self.cajaNombre = Entry(self.frame, textvariable=self.nombre).place(x=130, y=90)
         self.etiquetaApellido = Label(self.frame, text="Apellido:").place(x=50, y=130)

@@ -39,7 +39,7 @@ class agenda(Toplevel):
         self.email = StringVar()
         self.telefonoUno = StringVar()
         self.telefonoDos = StringVar()
-        self.categoria = self.combo.current()
+        
         self.ID.set(str(self.id_usuario))
         self.etiquetaNombre = Label(self.frame, text="Nombre: ", bg=self.colorVentana, fg="white").place(x=50, y=90)
         self.cajaNombre = Entry(self.frame, textvariable=self.nombre).place(x=130, y=90)
@@ -57,7 +57,7 @@ class agenda(Toplevel):
         self.combo.current(0)
         self.text = Text(self.frame)
         self.text.place(x=50, y=240, width=500, height=200)
-
+        self.categoria = self.combo.current()
         botonAñadir = Button(self.frame, text="Añadir", command=self.guardarDatos, background=self.color_boton).place(x=150, y=500)
         botonBorrar = Button(self.frame, text="Borrar", command=self.borrar_registro, background=self.color_boton).place(x=200, y=500)
         botonConsultar = Button(self.frame, text="Consultar", command=self.mostrar, background=self.color_boton).place(x=250, y=500)

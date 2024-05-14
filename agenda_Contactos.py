@@ -1,112 +1,110 @@
 from tkinter import *
 from tkinter import messagebox
 from BD import *
+class agenda(Toplevel):
+    def __init__(self,id, ventana_padre, *args, **kwargs):
+        super().__init__(ventana_padre,id)
+        self.id_usuario = id
+        ANCHO = 560
+        ALTO = 540
+        POSX = 400
+        POSY = 400
+        self.anchoAlto = str(ANCHO) + "x" + str(ALTO)
+        self.posicionX = "+" + str(POSX)
+        self.posicionY = "+" + str(POSY)
+        self.colorVentana = "blue"
 
-ANCHO = 560
-ALTO = 540
-POSX = 400
-POSY = 400
+        self.config(bg=self.colorVentana)
+        self.geometry(self.anchoAlto + self.posicionX + self.posicionY)
+        self.title("Agenda")
 
-def mostrarMensaje(titulo, mensaje):
-    messagebox.showinfo(titulo, mensaje)
+        self.frame = Frame(self)
+        self.frame.config(width=ANCHO, height=ALTO, bg="darkblue")
+        self.frame.pack()
 
-def limpiarDatos():
-    nombre.set("")
-    apellido.set("")
-    telefono.set("")
-    email.set("")
-    text.delete(1.0, END)
+        self.ID = IntVar()
+        self.nombre = StringVar()
+        self.apellido = StringVar()
+        self.telefono = StringVar()
+        self.email = StringVar()
 
-def guardarDatos():
-    crearTablaContactos()
-    if nombre.get() == "" or apellido.get() == "":
-        mostrarMensaje("ERROR", "Debes rellenar Los datos")
-    else:
-        datos = nombre.get(), apellido.get(), telefono.get(), email.get()
-        mostrarMensaje("Guardar", "Contacto Guardado")
-        insertarContacto(datos)
-        limpiarDatos()
+        self.etiquetaID = Label(self.frame, text="ID: ").place(x=50, y=50)
+        self.cajaID = Entry(self.frame, textvariable=self.ID).place(x=130, y=50)
+        self.etiquetaNombre = Label(self.frame, text="Nombre: ").place(x=50, y=90)
+        self.cajaNombre = Entry(self.frame, textvariable=self.nombre).place(x=130, y=90)
+        self.etiquetaApellido = Label(self.frame, text="Apellido:").place(x=50, y=130)
+        self.cajaApellido = Entry(self.frame, textvariable=self.apellido).place(x=130, y=130)
+        self.etiquetaTelefono = Label(self.frame, text="Telefono").place(x=50, y=170)
+        self.cajaTelefono = Entry(self.frame, textvariable=self.telefono).place(x=130, y=170)
+        self.etiquetaEmail = Label(self.frame, text="Email: ").place(x=50, y=210)
+        self.cajaEmail = Entry(self.frame, textvariable=self.email).place(x=130, y=210)
 
-def actualizar():
-    crearTablaContactos()
-    if ID.get() == "" and nombre.get() == "":
-        mostrarMensaje("Error", "Debes rellenar los datos ")
-    else:
-        modificarContacto(ID.get(), nombre.get(), apellido.get(), telefono.get(), email.get())
-        mostrarMensaje("Modificacion", "Se han modificado los datos")
-        limpiarDatos()
+        self.text = Text(self.frame)
+        self.text.place(x=50, y=240, width=500, height=200)
 
-def borrar_registro():
-    if ID.get() == "":
-        mostrarMensaje("Error", "No se encontro el contacto")
-    else:
-        borrarContacto(ID.get())
-        mostrarMensaje("Borrar", "Se ha borrado el contacto")
-        limpiarDatos()
-
-def mostrar():
-    listado = consultarContacto()
-    text.delete(1.0, END)
-    text.insert(INSERT, "ID\tNombre\tApellido\t\tTelefono\tEmail\n")
-    for elemento in listado:
-        id_ = elemento[0]
-        nombre_ = elemento[1]
-        apellido_ = elemento[2]
-        telefono_ = elemento[3]
-        email_ = elemento[4]
-        text.insert(INSERT, id_)
-        text.insert(INSERT, "\t")
-        text.insert(INSERT, nombre_)
-        text.insert(INSERT, "\t")
-        text.insert(INSERT, apellido_)
-        text.insert(INSERT, "\t\t")
-        text.insert(INSERT, telefono_)
-        text.insert(INSERT, "\t")
-        text.insert(INSERT, email_)
-        text.insert(INSERT, "\n")
-
-anchoAlto = str(ANCHO) + "x" + str(ALTO)
-posicionX = "+" + str(POSX)
-posicionY = "+" + str(POSY)
-colorVentana = "blue"
-
-ventana = Tk()
-ventana.config(bg=colorVentana)
-ventana.geometry(anchoAlto + posicionX + posicionY)
-ventana.title("Agenda")
-
-frame = Frame()
-frame.config(width=ANCHO, height=ALTO, bg="darkblue")
-frame.pack()
-
-ID = IntVar()
-nombre = StringVar()
-apellido = StringVar()
-telefono = StringVar()
-email = StringVar()
-
-etiquetaID = Label(frame, text="ID: ").place(x=50, y=50)
-cajaID = Entry(frame, textvariable=ID).place(x=130, y=50)
-etiquetaNombre = Label(frame, text="Nombre: ").place(x=50, y=90)
-cajaNombre = Entry(frame, textvariable=nombre).place(x=130, y=90)
-etiquetaApellido = Label(frame, text="Apellido:").place(x=50, y=130)
-cajaApellido = Entry(frame, textvariable=apellido).place(x=130, y=130)
-etiquetaTelefono = Label(frame, text="Telefono").place(x=50, y=170)
-cajaTelefono = Entry(frame, textvariable=telefono).place(x=130, y=170)
-etiquetaEmail = Label(frame, text="Email: ").place(x=50, y=210)
-cajaEmail = Entry(frame, textvariable=email).place(x=130, y=210)
-
-text = Text(frame)
-text.place(x=50, y=240, width=500, height=200)
-
-botonAñadir = Button(frame, text="Añadir", command=guardarDatos).place(x=150, y=500)
-botonBorrar = Button(frame, text="Borrar", command=borrar_registro).place(x=200, y=500)
-botonConsultar = Button(frame, text="Consultar", command=mostrar).place(x=250, y=500)
-botonModificar = Button(frame, text="Actualizar", command=actualizar).place(x=320, y=500)
-
-ventana.mainloop()
+        botonAñadir = Button(self.frame, text="Añadir", command=self.guardarDatos).place(x=150, y=500)
+        botonBorrar = Button(self.frame, text="Borrar", command=self.borrar_registro).place(x=200, y=500)
+        botonConsultar = Button(self.frame, text="Consultar", command=self.mostrar).place(x=250, y=500)
+        botonModificar = Button(self.frame, text="Actualizar", command=self.actualizar).place(x=320, y=500)
 
 
+    def mostrarMensaje(titulo, mensaje):
+            messagebox.showinfo(titulo, mensaje)
+
+    def limpiarDatos(self):
+        self.nombre.set("")
+        self.apellido.set("")
+        self.telefono.set("")
+        self.email.set("")
+        self.text.delete(1.0, END)
+
+    def guardarDatos(self):
+        crearTablaContactos()
+        if self.nombre.get() == "" or self.apellido.get() == "":
+            self.mostrarMensaje("ERROR", "Debes rellenar Los datos")
+        else:
+            datos = self.nombre.get(), self.apellido.get(), self.telefono.get(), self.email.get()
+            self.mostrarMensaje("Guardar", "Contacto Guardado")
+            self.insertarContacto(datos)
+            self.limpiarDatos()
+
+    def actualizar(self):
+        crearTablaContactos()
+        if self.ID.get() == "" and self.nombre.get() == "":
+            self.mostrarMensaje("Error", "Debes rellenar los datos ")
+        else:
+            self.modificarContacto(self.ID.get(), self.nombre.get(), self.apellido.get(), self.telefono.get(), self.email.get())
+            self.mostrarMensaje("Modificacion", "Se han modificado los datos")
+            self.limpiarDatos()
+
+    def borrar_registro(self):
+        if self.ID.get() == "":
+            self.mostrarMensaje("Error", "No se encontro el contacto")
+        else:
+            self.borrarContacto(self.ID.get())
+            self.mostrarMensaje("Borrar", "Se ha borrado el contacto")
+            self.limpiarDatos()
+
+    def mostrar(self):
+        listado = consultarContacto()
+        self.text.delete(1.0, END)
+        self.text.insert(INSERT, "ID\tNombre\tApellido\t\tTelefono\tEmail\n")
+        for elemento in listado:
+            id_ = elemento[0]
+            nombre_ = elemento[1]
+            apellido_ = elemento[2]
+            telefono_ = elemento[3]
+            email_ = elemento[4]
+            self.text.insert(INSERT, id_)
+            self.text.insert(INSERT, "\t")
+            self.text.insert(INSERT, nombre_)
+            self.text.insert(INSERT, "\t")
+            self.text.insert(INSERT, apellido_)
+            self.text.insert(INSERT, "\t\t")
+            self.text.insert(INSERT, telefono_)
+            self.text.insert(INSERT, "\t")
+            self.text.insert(INSERT, email_)
+            self.text.insert(INSERT, "\n")
 
 
 

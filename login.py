@@ -5,6 +5,7 @@ from imagenes import *
 from BD_inicio_sesion_sql import *
 from registro import Registro 
 from ventana_admin import ventana_admin
+from agenda_Contactos import agenda
 class Login:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -134,7 +135,10 @@ class Login:
             usuario = iniciarSesion(self.correo.get(),self.contrasena.get())
             if usuario is not None:
                 self.mostrarMensaje("Inicio de sesión", "Inicio sesion")
-                self.limpiar()
+                self.ventana.withdraw()
+                str(usuario)
+                agenda(usuario,self.ventana,)
+                
         
     def VentanaRegistrar(self):
         self.ventana.withdraw()

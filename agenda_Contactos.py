@@ -107,7 +107,7 @@ class agenda(Toplevel):
         if self.ID.get() == "" and self.nombre.get() == "":
             self.mostrarMensaje("Error", "Debes rellenar los datos ")
         else:
-            modificarContacto(self.ID.get(), self.nombre.get(), self.apellido.get(), self.telefonoUno.get(), self.email.get())
+            modificarContacto(self.id_usuario,self.categoria,self.nombre.get(), self.apellido.get(), self.email.get(), self.telefonoUno.get(),self.telefonoDos.get())
             self.mostrarMensaje("Modificacion", "Se han modificado los datos")
             self.limpiarDatos()
 
@@ -121,7 +121,7 @@ class agenda(Toplevel):
             self.limpiarDatos()
 
     def mostrar(self):
-        listado = consultarContacto()
+        listado = consultarFiltrar()
         self.text.delete(1.0, END)
         self.text.insert(INSERT, "ID\tNombre\tApellido\t\tTelefono\tEmail\n")
         for elemento in listado:

@@ -15,15 +15,3 @@ def iniciarSesion(correo, contrasena):
         print("Correo electrónico o contraseña incorrectos")
         return None
 ##QUEMAR ARCHIVOS 
-""" nombre_categoria = "FAVORITOS"
-crearTablaCategoria()
-insertarCategoria((nombre_categoria,))
- """
-
-""" nombreUser = "ewfwfe"
-apellido = "regverg"
-correo = "admin"
-contrasena = "admin"
-direccion = "admwefwfewin"
-crearTablaUsuarios()
-insertarUsuario((nombreUser,apellido,correo,contrasena,direccion)) """

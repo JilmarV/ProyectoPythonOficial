@@ -197,6 +197,16 @@ def iniciarSesion(correo, contrasena):
     else:
         print("Correo electrónico o contraseña incorrectos")
         return None
+def consultarCategoria():
+    conexion, cursor = conectar()
+    sql = "SELECT   nombre_categoria FROM categoria"
+    cursor.execute(sql)
+    listado = []
+    for fila in cursor:
+        listado.append(fila)    
+    conexion.close()
+    return listado
+
 ##QUEMAR ARCHIVOS 
 """ nombre_categoria = "FAVORITOS"
 crearTablaCategoria()

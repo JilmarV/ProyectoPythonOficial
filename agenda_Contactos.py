@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
-from BD import *
+from BD_contactos import *
+from tkinter import ttk
 class agenda(Toplevel):
     def __init__(self,id, ventana_padre, *args, **kwargs):
         super().__init__(ventana_padre)
@@ -26,7 +27,7 @@ class agenda(Toplevel):
         self.frame.pack()
         
         self.titulo = Label(self.frame,
-                            text="Registro de usuario",
+                            text="GESTION DE CONTACTOS",
                             font=("Calisto MT", 36, "bold"),
                             bg=self.colorVentana,
                             fg="white")
@@ -35,19 +36,25 @@ class agenda(Toplevel):
         self.ID = IntVar()
         self.nombre = StringVar()
         self.apellido = StringVar()
-        self.telefono = StringVar()
         self.email = StringVar()
-
+        self.telefonoUno = StringVar()
+        self.telefonoDos = StringVar()
+        self.categoria = self.combo.current()
         self.ID.set(str(self.id_usuario))
         self.etiquetaNombre = Label(self.frame, text="Nombre: ", bg=self.colorVentana, fg="white").place(x=50, y=90)
         self.cajaNombre = Entry(self.frame, textvariable=self.nombre).place(x=130, y=90)
         self.etiquetaApellido = Label(self.frame, text="Apellido:", bg=self.colorVentana, fg="white").place(x=50, y=130)
         self.cajaApellido = Entry(self.frame, textvariable=self.apellido).place(x=130, y=130)
         self.etiquetaTelefono = Label(self.frame, text="Telefono", bg=self.colorVentana, fg="white").place(x=50, y=170)
-        self.cajaTelefono = Entry(self.frame, textvariable=self.telefono).place(x=130, y=170)
+        self.cajaTelefono = Entry(self.frame, textvariable=self.telefonoUno).place(x=130, y=170)
         self.etiquetaEmail = Label(self.frame, text="Email: ", bg=self.colorVentana, fg="white").place(x=50, y=210)
         self.cajaEmail = Entry(self.frame, textvariable=self.email).place(x=130, y=210)
-
+        
+        self.combo = ttk.Combobox(self.frame)
+        self.combo.place(x=300,y=90)
+        listaCategoria =  consultarCategoria()
+        self.combo['values'] = listaCategoria
+        self.combo.current(0)
         self.text = Text(self.frame)
         self.text.place(x=50, y=240, width=500, height=200)
 
@@ -70,34 +77,33 @@ class agenda(Toplevel):
     def limpiarDatos(self):
         self.nombre.set("")
         self.apellido.set("")
-        self.telefono.set("")
+        self.telefonoUno.set("")
         self.email.set("")
         self.text.delete(1.0, END)
 
     def guardarDatos(self):
-        crearTablaContactos()
         if self.nombre.get() == "" or self.apellido.get() == "":
             self.mostrarMensaje("ERROR", "Debes rellenar Los datos")
         else:
-            datos = self.nombre.get(), self.apellido.get(), self.telefono.get(), self.email.get()
+            datos = self.categoria,self.id_usuario,self.nombre.get(), self.apellido.get(), self.email.get(), self.telefonoUno.get(),self.telefonoDos.get()
             self.mostrarMensaje("Guardar", "Contacto Guardado")
-            self.insertarContacto(datos)
+            insertarContacto(datos)
             self.limpiarDatos()
 
     def actualizar(self):
-        crearTablaContactos()
         if self.ID.get() == "" and self.nombre.get() == "":
             self.mostrarMensaje("Error", "Debes rellenar los datos ")
         else:
-            self.modificarContacto(self.ID.get(), self.nombre.get(), self.apellido.get(), self.telefono.get(), self.email.get())
+            modificarContacto(self.ID.get(), self.nombre.get(), self.apellido.get(), self.telefonoUno.get(), self.email.get())
             self.mostrarMensaje("Modificacion", "Se han modificado los datos")
             self.limpiarDatos()
 
     def borrar_registro(self):
+        #print(self.combo.current())
         if self.ID.get() == "":
             self.mostrarMensaje("Error", "No se encontro el contacto")
         else:
-            self.borrarContacto(self.ID.get())
+            borrarContacto(self.ID.get())
             self.mostrarMensaje("Borrar", "Se ha borrado el contacto")
             self.limpiarDatos()
 

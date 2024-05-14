@@ -10,7 +10,9 @@ def crearTablaContactos():
             id_usuario int NOT NULL,
             nombre_contacto VARCHAR(60) NOT NULL,
             apellido_contacto VARCHAR(60) NOT NULL,
-            email VARCHAR(20) NOT NULL,
+            email VARCHAR(20) UNIQUE NOT NULL,
+            telefonoUno VARCHAR(10)  UNIQUE NOT NULL,
+            telefonoDos VARCHAR(10),
             CONSTRAINT id_de_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
             CONSTRAINT id_de_categoria FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
         )
@@ -83,7 +85,19 @@ def crearTablaCategoria():
     else:
         print("No se pudo crear la tabla ")
     conexion.close()
-
+#crearTablaCategoria()
 crearTablaContactos()
-crearTablaUsuarios()
+#crearTablaUsuarios()
 #--------------------------------------------------------------------------------------------------------------------------
+def BORRAR():
+    conexion, cursor = Conexion.conectar()
+    sql = """    
+        DROP  TABLE contacto
+        
+    """
+    if cursor.execute(sql):
+        print("Tabla BORRADA  Creada")
+    else:
+        print("No se pudo crear la tabla ")
+    conexion.close()
+#BORRAR()

@@ -4,7 +4,8 @@ from BD_conexionsql import Conexion
 def insertarContacto(datos):
     conexion, cursor = Conexion.conectar()
     sql = """
-    INSERT INTO Contactos(nombre,apellido,telefono,email) VALUES(?,?,?,?)
+    INSERT INTO contacto(id_categoria, id_usuario, nombre_contacto, apellido_contacto, email)
+    VALUES (?, ?, ?, ?, ?)
     """
     if cursor.execute(sql, datos):
         print("Datos guardados")
@@ -15,7 +16,7 @@ def insertarContacto(datos):
 
 def consultarContacto():
     conexion, cursor = Conexion.conectar()
-    sql = "SELECT id,nombre,apellido,telefono,email FROM Contactos"
+    sql = "SELECT id_contacto, nombre_contacto, apellido_contacto, telefono, email FROM contacto"
     cursor.execute(sql)
     listado = []
     for fila in cursor:
@@ -25,16 +26,26 @@ def consultarContacto():
 
 def modificarContacto(id, nombre, apellido, telefono, email):
     conexion, cursor = Conexion.conectar()
-    sql = """UPDATE agenda 
-             SET nombre=?, apellido=?, telefono=?, email=? 
-             WHERE id=?"""
+    sql = """UPDATE contacto
+            SET nombre_contacto=?, apellido_contacto=?, telefono=?, email=?
+            WHERE id_contacto=?"""
     cursor.execute(sql, (nombre, apellido, telefono, email, id))
     conexion.commit()
     conexion.close()
 
 def borrarContacto(id):
     conexion, cursor = Conexion.conectar()
-    sql = "DELETE FROM agenda WHERE id = ?"
+    sql = "DELETE FROM contacto WHERE id_contacto = ? OR telefono=?"
     cursor.execute(sql, (id,))
     conexion.commit()
     conexion.close()
+
+def consultarCategoria():
+    conexion, cursor = Conexion.conectar()
+    sql = "SELECT  nombre_categoria FROM categoria"
+    cursor.execute(sql)
+    listado = []
+    for fila in cursor:
+        listado.append(fila)    
+    conexion.close()
+    return listado

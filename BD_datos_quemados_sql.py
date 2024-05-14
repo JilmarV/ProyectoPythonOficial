@@ -1,5 +1,5 @@
-from conexionsql import Conexion
-
+from BD_conexionsql import Conexion
+from BD_tablas_sql import crearTablaCategoria
 #INSERTAR DATOS QUEMADOS
 def insertarCategoria(datos):
     conexion, cursor = Conexion.conectar()
@@ -12,3 +12,16 @@ def insertarCategoria(datos):
         print("No se pudieron guardar los datos  del usuario")
     conexion.commit()
     conexion.close()
+
+nombre_categoria = "OTROS"
+#crearTablaCategoria()
+insertarCategoria((nombre_categoria,))
+
+
+""" nombreUser = "ewfwfe"
+apellido = "regverg"
+correo = "admin"
+contrasena = "admin"
+direccion = "admwefwfewin"
+crearTablaUsuarios()
+insertarUsuario((nombreUser,apellido,correo,contrasena,direccion)) """

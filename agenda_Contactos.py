@@ -28,10 +28,10 @@ class agenda(Toplevel):
         
         self.titulo = Label(self.frame,
                             text="GESTION DE CONTACTOS",
-                            font=("Calisto MT", 36, "bold"),
+                            font=("Calisto MT", 26, "bold"),
                             bg=self.colorVentana,
                             fg="white")
-        self.titulo.place(x=100, y=10)
+        self.titulo.place(x=40, y=10)
 
         self.ID = IntVar()
         self.nombre = StringVar()
@@ -45,13 +45,26 @@ class agenda(Toplevel):
         self.cajaNombre = Entry(self.frame, textvariable=self.nombre).place(x=130, y=90)
         self.etiquetaApellido = Label(self.frame, text="Apellido:", bg=self.colorVentana, fg="white").place(x=50, y=130)
         self.cajaApellido = Entry(self.frame, textvariable=self.apellido).place(x=130, y=130)
-        self.etiquetaTelefono = Label(self.frame, text="Telefono", bg=self.colorVentana, fg="white").place(x=50, y=170)
+        self.etiquetaTelefono = Label(self.frame, text="Telefono:", bg=self.colorVentana, fg="white").place(x=50, y=170)
         self.cajaTelefono = Entry(self.frame, textvariable=self.telefonoUno).place(x=130, y=170)
         self.etiquetaEmail = Label(self.frame, text="Email: ", bg=self.colorVentana, fg="white").place(x=50, y=210)
         self.cajaEmail = Entry(self.frame, textvariable=self.email).place(x=130, y=210)
         
+        self.label_telefonoDos = Label(self.frame,
+                                                text = "Telefono 2:",
+                                                bg = self.colorVentana,
+                                                fg = "white")
+        self.label_telefonoDos.place(x = 300, y =170 )
+        
+        self.entry_telefonoDos = Entry(self.frame,
+                                                    bd = 0,
+                                                    width = 20,
+                                                    textvariable=self.telefonoDos)
+        self.entry_telefonoDos.place(x = 400, y =170 )
+        
+        self.etiquetaCombo = Label(self.frame, text="Categoría: ", bg=self.colorVentana, fg="white").place(x=300, y=90)
         self.combo = ttk.Combobox(self.frame)
-        self.combo.place(x=300,y=90)
+        self.combo.place(x=400,y=90)
         listaCategoria =  consultarCategoria()
         self.combo['values'] = listaCategoria
         self.combo.current(0)

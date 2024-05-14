@@ -22,6 +22,7 @@ class ventana_admin(Toplevel):
         
         fondo = "#01172F"
         color_boton = "#08A4BD"
+        color_boton_secundario = "#00635D"
         
         #--------------------------------
         #       parte frames
@@ -188,6 +189,14 @@ class ventana_admin(Toplevel):
                                           command = self.modificar)
         self.boton_actualizar_usuario.grid(row = 9, column = 1, columnspan = 3, pady = 10)
         
+        self.boton_atras = Button(self.frame_superior,
+                                          text = "Atras",
+                                          width = 15,
+                                          font = ("Arial", 11),
+                                          background = color_boton_secundario,
+                                          command=self.atras)
+        self.boton_atras.grid(row = 10, column = 1, columnspan = 3, pady = 10)
+        
     def limpiar(self):
         self.nombre.set("")
         self.apellido.set("")
@@ -242,7 +251,10 @@ class ventana_admin(Toplevel):
         else:
             messagebox.showinfo("Modificación fallida", "Seleccione un usuario")
 
-
+    def atras(self):
+        self.destroy()
+        ventanaInicio = self.master
+        ventanaInicio.deiconify()
             
     def buscar_usuario(self):
     # Obtener la fila seleccionada

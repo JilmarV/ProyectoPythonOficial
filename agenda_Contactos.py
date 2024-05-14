@@ -6,7 +6,7 @@ class agenda(Toplevel):
         super().__init__(ventana_padre)
         self.id_usuario = id
         self.ANCHO = 560
-        self.ALTO = 540
+        self.ALTO = 600
         self.POSX = 400
         self.POSY = 400
         self.anchoAlto = str(self.ANCHO) + "x" + str(self.ALTO)
@@ -22,8 +22,15 @@ class agenda(Toplevel):
         self.title("Agenda")
 
         self.frame = Frame(self)
-        self.frame.config(width=self.ANCHO, height=self.ALTO, bg="darkblue")
+        self.frame.config(width=self.ANCHO, height=self.ALTO, bg=self.colorVentana)
         self.frame.pack()
+        
+        self.titulo = Label(self.frame,
+                            text="Registro de usuario",
+                            font=("Calisto MT", 36, "bold"),
+                            bg=self.colorVentana,
+                            fg="white")
+        self.titulo.place(x=100, y=10)
 
         self.ID = IntVar()
         self.nombre = StringVar()
@@ -31,16 +38,14 @@ class agenda(Toplevel):
         self.telefono = StringVar()
         self.email = StringVar()
 
-        self.etiquetaID = Label(self.frame, text="ID: ").place(x=50, y=50)
-        self.cajaID = Entry(self.frame, textvariable=self.ID).place(x=130, y=50)
         self.ID.set(str(self.id_usuario))
-        self.etiquetaNombre = Label(self.frame, text="Nombre: ").place(x=50, y=90)
+        self.etiquetaNombre = Label(self.frame, text="Nombre: ", bg=self.colorVentana, fg="white").place(x=50, y=90)
         self.cajaNombre = Entry(self.frame, textvariable=self.nombre).place(x=130, y=90)
-        self.etiquetaApellido = Label(self.frame, text="Apellido:").place(x=50, y=130)
+        self.etiquetaApellido = Label(self.frame, text="Apellido:", bg=self.colorVentana, fg="white").place(x=50, y=130)
         self.cajaApellido = Entry(self.frame, textvariable=self.apellido).place(x=130, y=130)
-        self.etiquetaTelefono = Label(self.frame, text="Telefono").place(x=50, y=170)
+        self.etiquetaTelefono = Label(self.frame, text="Telefono", bg=self.colorVentana, fg="white").place(x=50, y=170)
         self.cajaTelefono = Entry(self.frame, textvariable=self.telefono).place(x=130, y=170)
-        self.etiquetaEmail = Label(self.frame, text="Email: ").place(x=50, y=210)
+        self.etiquetaEmail = Label(self.frame, text="Email: ", bg=self.colorVentana, fg="white").place(x=50, y=210)
         self.cajaEmail = Entry(self.frame, textvariable=self.email).place(x=130, y=210)
 
         self.text = Text(self.frame)
@@ -50,8 +55,15 @@ class agenda(Toplevel):
         botonBorrar = Button(self.frame, text="Borrar", command=self.borrar_registro, background=self.color_boton).place(x=200, y=500)
         botonConsultar = Button(self.frame, text="Consultar", command=self.mostrar, background=self.color_boton).place(x=250, y=500)
         botonModificar = Button(self.frame, text="Actualizar", command=self.actualizar, background=self.color_boton).place(x=320, y=500)
-
-
+        boton_atras = Button(self.frame,
+                                          text = "Atras",
+                                          background = self.color_boton_secundario,
+                                          command=self.atras).place(x=420, y=500)
+    def atras(self):
+        self.destroy()
+        ventanaInicio = self.master
+        ventanaInicio.deiconify()
+        
     def mostrarMensaje(titulo, mensaje):
             messagebox.showinfo(titulo, mensaje)
 

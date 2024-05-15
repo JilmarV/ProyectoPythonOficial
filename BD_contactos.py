@@ -49,3 +49,24 @@ def consultarCategoria():
         listado.append(fila)    
     conexion.close()
     return listado
+
+#consulta contacto
+def obtenerContactosPorUsuario(id_usuario):
+    conexion, cursor = Conexion.conectar()
+    sql = """
+    SELECT * FROM contacto WHERE id_usuario = ?
+    """
+    cursor.execute(sql, (id_usuario,))
+    contactos = cursor.fetchall()
+    conexion.close()
+    return contactos
+
+def obtenerContactosPorUsuarioYCategoria(id_usuario, id_categoria):
+    conexion, cursor = Conexion.conectar()
+    sql = """
+    SELECT * FROM contacto WHERE id_usuario = ? AND id_categoria = ?
+    """
+    cursor.execute(sql, (id_usuario, id_categoria))
+    contactos = cursor.fetchall()
+    conexion.close()
+    return contactos

@@ -24,21 +24,25 @@ def consultarFiltrar(id_contacto,id_categoria):
     conexion.close()
     return listado
 
-def modificarContacto(id_contacto,categoria, nombre, apellido, telefonoUno,telefonoDos, email):
+def modificarContacto(id_usuario,categoria, nombre, apellido, telefonoUno,telefonoDos, email):
     conexion, cursor = Conexion.conectar()
     sql = """UPDATE contacto
-            SET id_categoria=?, nombre_contacto=?, apellido_contacto=?, email=?, telefonoUno=?, telefonoDos=?
-            WHERE id_contacto=?"""
-    cursor.execute(sql, (categoria,nombre, apellido,email,telefonoUno,telefonoDos,id_contacto))
+            SET id_categoria=?, nombre_contacto=?,apellido_contacto=?, email=?, telefonoDos=?
+            WHERE id_usuario=? OR  telefonoUno=?"""
+    cursor.execute(sql, (categoria,nombre,apellido,email,telefonoDos,id_usuario,telefonoUno))
     conexion.commit()
     conexion.close()
 
-def borrarContacto(id_contacto,telefono):
+def borrarContacto(id_usuario,telefono,nombre):
     conexion, cursor = Conexion.conectar()
-    sql = "DELETE FROM contacto WHERE id_contacto = ? OR telefono=?"
-    cursor.execute(sql, (id_contacto,telefono))
+    sql = "DELETE FROM contacto WHERE (id_usuario =?) AND (telefonoUno=? OR nombre_contacto=?) "
+    if cursor.execute(sql, (id_usuario,telefono,nombre)) != 0:
+        print("print se borro")
+    else:
+        print("print se borro")
     conexion.commit()
     conexion.close()
+    
 
 def consultarCategoria():
     conexion, cursor = Conexion.conectar()

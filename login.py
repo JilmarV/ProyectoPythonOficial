@@ -146,4 +146,4 @@ class Login:
     def Ventana_admin(self):
         self.ventana.withdraw()
         ventana_admin(self.ventana)
-Login()
+Login() 

@@ -25,3 +25,17 @@ contrasena = "admin"
 direccion = "admwefwfewin"
 crearTablaUsuarios()
 insertarUsuario((nombreUser,apellido,correo,contrasena,direccion)) """
+
+def borrarContactoAll():
+    conexion, cursor = Conexion.conectar()
+    sql = """
+    DELETE FROM  contacto
+    """
+    if cursor.execute(sql):
+        print("Datos guardados")
+    else:
+        print("No se pudieron guardar los datos  del usuario")
+    conexion.commit()
+    conexion.close()
+    
+borrarContactoAll()

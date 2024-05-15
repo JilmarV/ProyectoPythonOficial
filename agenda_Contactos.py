@@ -33,14 +33,12 @@ class agenda(Toplevel):
                             fg="white")
         self.titulo.place(x=40, y=10)
 
-        self.ID = IntVar()
         self.nombre = StringVar()
         self.apellido = StringVar()
         self.email = StringVar()
-        self.telefonoUno = StringVar()
+        self.telefonoUno = IntVar()
         self.telefonoDos = StringVar()
         
-        self.ID.set(str(self.id_usuario))
         self.etiquetaNombre = Label(self.frame, text="Nombre: ", bg=self.colorVentana, fg="white").place(x=50, y=90)
         self.cajaNombre = Entry(self.frame, textvariable=self.nombre).place(x=130, y=90)
         self.etiquetaApellido = Label(self.frame, text="Apellido:", bg=self.colorVentana, fg="white").place(x=50, y=130)
@@ -68,9 +66,11 @@ class agenda(Toplevel):
         listaCategoria =  consultarCategoria()
         self.combo['values'] = listaCategoria
         self.combo.current(0)
+        #   metodo para cuando el suaurio cambie de seleccion cargarCategoria()
         self.text = Text(self.frame)
-        self.text.place(x=50, y=240, width=500, height=200)
+        self.text.place(x=50, y=240, width=650, height=300)
         self.categoria = self.combo.current()
+        self.combo.bind("<<ComboboxSelected>>",self.cargarCategoria)
         botonAñadir = Button(self.frame, text="Añadir", command=self.guardarDatos, background=self.color_boton).place(x=150, y=500)
         botonBorrar = Button(self.frame, text="Borrar", command=self.borrar_registro, background=self.color_boton).place(x=200, y=500)
         botonConsultar = Button(self.frame, text="Consultar", command=self.mostrar, background=self.color_boton).place(x=250, y=500)
@@ -79,12 +79,42 @@ class agenda(Toplevel):
                                           text = "Atras",
                                           background = self.color_boton_secundario,
                                           command=self.atras).place(x=420, y=500)
+    def on_selected(self):
+        self.cargarCategoria(self.id_usuario,self.combo.current())
+    
+    
+    def cargarCategoria(self,event):
+        listado = obtenerContactosPorUsuarioYCategoria(self.id_usuario,self.combo.current())
+        self.text.delete(1.0, END)
+        self.text.insert(INSERT, "ID_Categoria\tID_Usuario\tNombre_Contacto\tApellido_Contacto\t\tEmail\tTelefono_Uno\tTelefono_Dos\n")
+        for elemento in listado:
+            id_categoria_ = elemento[0]
+            id_usuario_ = elemento[1]
+            nombre_ = elemento[2]
+            apellido_ = elemento[3]
+            email_ = elemento[4]
+            telefono_Uno = elemento[5]
+            telefono_Dos = elemento[6]
+            self.text.insert(INSERT, id_categoria_)
+            self.text.insert(INSERT, "\t")
+            self.text.insert(INSERT, id_usuario_)
+            self.text.insert(INSERT, "\t")
+            self.text.insert(INSERT, nombre_)
+            self.text.insert(INSERT, "\t\t")
+            self.text.insert(INSERT, apellido_)
+            self.text.insert(INSERT, "\t")
+            self.text.insert(INSERT, email_)
+            self.text.insert(INSERT, "\t")
+            self.text.insert(INSERT, telefono_Uno)
+            self.text.insert(INSERT, "\t")
+            self.text.insert(INSERT, telefono_Dos)
+            self.text.insert(INSERT, "\n")
     def atras(self):
         self.destroy()
         ventanaInicio = self.master
         ventanaInicio.deiconify()
         
-    def mostrarMensaje(titulo, mensaje):
+    def mostrarMensaje(self,titulo, mensaje):
             messagebox.showinfo(titulo, mensaje)
 
     def limpiarDatos(self):
@@ -98,25 +128,21 @@ class agenda(Toplevel):
         if self.nombre.get() == "" or self.apellido.get() == "":
             self.mostrarMensaje("ERROR", "Debes rellenar Los datos")
         else:
-            datos = self.categoria,self.id_usuario,self.nombre.get(), self.apellido.get(), self.email.get(), self.telefonoUno.get(),self.telefonoDos.get()
-            self.mostrarMensaje("Guardar", "Contacto Guardado")
+            #self.mostrarMensaje("Guardar","Contacto Guardado")
+            datos = self.combo.current()+1,self.id_usuario,self.nombre.get(), self.apellido.get(), self.email.get(), self.telefonoUno.get(),self.telefonoDos.get()
             insertarContacto(datos)
             self.limpiarDatos()
 
     def actualizar(self):
-        if self.ID.get() == "" and self.nombre.get() == "":
+        if  self.nombre.get() == "":
             self.mostrarMensaje("Error", "Debes rellenar los datos ")
         else:
-            modificarContacto(self.id_usuario,self.categoria,self.nombre.get(), self.apellido.get(), self.email.get(), self.telefonoUno.get(),self.telefonoDos.get())
+            modificarContacto(self.id_usuario,self.combo.current()+1,self.nombre.get(), self.apellido.get(), self.email.get(), self.telefonoUno.get(),self.telefonoDos.get())
             self.mostrarMensaje("Modificacion", "Se han modificado los datos")
             self.limpiarDatos()
 
     def borrar_registro(self):
-        #print(self.combo.current())
-        if self.ID.get() == "":
-            self.mostrarMensaje("Error", "No se encontro el contacto")
-        else:
-            borrarContacto(self.ID.get())
+            borrarContacto(self.id_usuario,self.telefonoUno.get(),self.nombre.get())
             self.mostrarMensaje("Borrar", "Se ha borrado el contacto")
             self.limpiarDatos()
 

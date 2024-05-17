@@ -86,7 +86,7 @@ def crearTablaCategoria():
         print("No se pudo crear la tabla ")
     conexion.close()
 #crearTablaCategoria()
-crearTablaContactos()
+#crearTablaContactos()
 #crearTablaUsuarios()
 #--------------------------------------------------------------------------------------------------------------------------
 def BORRAR():
@@ -101,3 +101,28 @@ def BORRAR():
         print("No se pudo crear la tabla ")
     conexion.close()
 #BORRAR()
+def llenarCategorias():
+    # Lista de categorías en el orden especificado
+    categorias = ["Todos", "Favoritos", "Amigos", "Trabajo", "Familia", "Otros"]
+    
+    # Conexión a la base de datos
+    conexion, cursor = Conexion.conectar()
+    try:
+        # Insertar las categorías
+        sql_insert = "INSERT INTO categoria (nombre_categoria) VALUES (?)"
+        for categoria in categorias:
+            cursor.execute(sql_insert, (categoria,))  # Asegurarse de que es una tupla de un solo elemento
+        
+        # Confirmar los cambios
+        conexion.commit()
+        print("Categorías insertadas correctamente")
+    except Exception as e:
+        # Revertir los cambios en caso de error
+        conexion.rollback()
+        print("No se pudieron insertar las categorías:", e)
+    finally:
+        # Cerrar la conexión
+        conexion.close()
+
+# Llamada a la función para insertar las categorías
+llenarCategorias()

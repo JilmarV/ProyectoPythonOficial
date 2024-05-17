@@ -119,7 +119,6 @@ class agenda(Toplevel):
         #   metodo para cuando el suaurio cambie de seleccion cargarCategoria()
         self.text = Text(self.frame)
         self.text.place(x=80, y=240, width=650, height=300)
-        self.categoria = self.combo.current()
         self.combo.bind("<<ComboboxSelected>>",self.cargarCategoria)
         
         botonAñadir = Button(self.frame, text="Añadir", command=self.guardarDatos, background=self.color_boton)
@@ -140,14 +139,11 @@ class agenda(Toplevel):
                                           command=self.atras)
         boton_atras.place(x=500, y=600)
         
-    def on_selected(self):
-        self.cargarCategoria(self.id_usuario,self.combo.current())
-    
-    
     def cargarCategoria(self,event):
-        listado = obtenerContactosPorUsuarioYCategoria(self.id_usuario,self.combo.current())
+        
+        listado = obtenerContactosPorUsuarioYCategoria(self.id_usuario,self.combo.current()+1)
         self.text.delete(1.0, END)
-        self.text.insert(INSERT, "Id Categoria\tID Usuario\tNombre\tApellido\t\tEmail\tTelefono Uno\tTelefono Dos\n")
+        self.text.insert(INSERT, "Categoria\tUsuario\tNombre\tApellido\t\tEmail\tTelefono Uno\tTelefono Dos\n")
         for elemento in listado:
             id_categoria_ = elemento[0]
             id_usuario_ = elemento[1]
@@ -161,7 +157,7 @@ class agenda(Toplevel):
             self.text.insert(INSERT, id_usuario_)
             self.text.insert(INSERT, "\t")
             self.text.insert(INSERT, nombre_)
-            self.text.insert(INSERT, "\t\t")
+            self.text.insert(INSERT, "\t")
             self.text.insert(INSERT, apellido_)
             self.text.insert(INSERT, "\t")
             self.text.insert(INSERT, email_)

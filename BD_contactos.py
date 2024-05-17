@@ -68,9 +68,13 @@ def obtenerContactosPorUsuario(id_usuario):
 def obtenerContactosPorUsuarioYCategoria(id_usuario, id_categoria):
     conexion, cursor = Conexion.conectar()
     sql = """
-    SELECT * FROM contacto WHERE id_usuario = ? AND id_categoria = ?
+    SELECT c.*, cat.nombre_categoria
+    FROM contacto c
+    INNER JOIN categoria cat ON c.id_categoria = cat.id_categoria
+    WHERE c.id_usuario = ? AND c.id_categoria = ?
     """
     cursor.execute(sql, (id_usuario, id_categoria))
     contactos = cursor.fetchall()
     conexion.close()
     return contactos
+

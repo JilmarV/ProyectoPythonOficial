@@ -13,7 +13,7 @@ class agenda(Toplevel):
         alto_pantalla = self.winfo_screenheight()
         
         # Dimensiones de la ventana
-        ancho_ventana = 800
+        ancho_ventana = 1000
         alto_ventana = 700
         
         x = (ancho_pantalla // 2) - (ancho_ventana // 2)
@@ -117,9 +117,31 @@ class agenda(Toplevel):
         self.combo['values'] = listaCategoria
         self.combo.current(0)
         #   metodo para cuando el suaurio cambie de seleccion cargarCategoria()
-        self.text = Text(self.frame)
-        self.text.place(x=80, y=240, width=650, height=300)
-        self.combo.bind("<<ComboboxSelected>>",self.cargarCategoria)
+        
+        
+        self.tree = ttk.Treeview(self.frame, columns=("categoria", "usuario", "nombres", "apellidos", "email", "telefono uno", "telefono dos"), show="headings")
+
+        # Ajuste de las columnas
+        self.tree.column("categoria", width=100)
+        self.tree.column("usuario", width=100)
+        self.tree.column("nombres", width=150)
+        self.tree.column("apellidos", width=150)
+        self.tree.column("email", width=200)
+        self.tree.column("telefono uno", width=100)
+        self.tree.column("telefono dos", width=100)
+
+        # Encabezados de las columnas
+        self.tree.heading("categoria", text="Categoría")
+        self.tree.heading("usuario", text="Usuario")
+        self.tree.heading("nombres", text="Nombres")
+        self.tree.heading("apellidos", text="Apellidos")
+        self.tree.heading("email", text="Email")
+        self.tree.heading("telefono uno", text="Teléfono Uno")
+        self.tree.heading("telefono dos", text="Teléfono Dos")
+
+        self.tree.grid(row=8, column=0, columnspan=2, padx=10, pady=10)
+
+        self.combo.bind("<<ComboboxSelected>>", self.cargarCategoria)
         
         botonAñadir = Button(self.frame, text="Añadir", command=self.guardarDatos, background=self.color_boton)
         botonAñadir.place(x=200, y=600)
@@ -139,11 +161,12 @@ class agenda(Toplevel):
                                           command=self.atras)
         boton_atras.place(x=500, y=600)
         
-    def cargarCategoria(self,event):
-        
-        listado = obtenerContactosPorUsuarioYCategoria(self.id_usuario,self.combo.current()+1)
-        self.text.delete(1.0, END)
-        self.text.insert(INSERT, "Categoria\tUsuario\tNombre\tApellido\t\tEmail\tTelefono Uno\tTelefono Dos\n")
+    def cargarCategoria(self, event):
+        listado = obtenerContactosPorUsuarioYCategoria(self.id_usuario, self.combo.current() + 1)
+
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
         for elemento in listado:
             id_categoria_ = elemento[0]
             id_usuario_ = elemento[1]
@@ -152,74 +175,63 @@ class agenda(Toplevel):
             email_ = elemento[4]
             telefono_Uno = elemento[5]
             telefono_Dos = elemento[6]
-            self.text.insert(INSERT, id_categoria_)
-            self.text.insert(INSERT, "\t")
-            self.text.insert(INSERT, id_usuario_)
-            self.text.insert(INSERT, "\t")
-            self.text.insert(INSERT, nombre_)
-            self.text.insert(INSERT, "\t")
-            self.text.insert(INSERT, apellido_)
-            self.text.insert(INSERT, "\t")
-            self.text.insert(INSERT, email_)
-            self.text.insert(INSERT, "\t")
-            self.text.insert(INSERT, telefono_Uno)
-            self.text.insert(INSERT, "\t")
-            self.text.insert(INSERT, telefono_Dos)
-            self.text.insert(INSERT, "\n")
+            self.tree.insert("", "end", values=(id_categoria_, id_usuario_, nombre_, apellido_, email_, telefono_Uno, telefono_Dos))
+
     def atras(self):
         self.destroy()
         ventanaInicio = self.master
         ventanaInicio.deiconify()
-        
-    def mostrarMensaje(self,titulo, mensaje):
-            messagebox.showinfo(titulo, mensaje)
+
+    def mostrarMensaje(self, titulo, mensaje):
+        messagebox.showinfo(titulo, mensaje)
 
     def limpiarDatos(self):
         self.nombre.set("")
         self.apellido.set("")
         self.telefonoUno.set("")
         self.email.set("")
-        self.text.delete(1.0, END)
+        self.telefonoDos.set("")
 
     def guardarDatos(self):
         if self.nombre.get() == "" or self.apellido.get() == "":
-            self.mostrarMensaje("ERROR", "Debes rellenar Los datos")
+            self.mostrarMensaje("ERROR", "Debes rellenar los datos")
         else:
-            #self.mostrarMensaje("Guardar","Contacto Guardado")
-            datos = self.combo.current()+1,self.id_usuario,self.nombre.get(), self.apellido.get(), self.email.get(), self.telefonoUno.get(),self.telefonoDos.get()
+            datos = (self.combo.current() + 1, self.id_usuario, self.nombre.get(), self.apellido.get(), self.email.get(), self.telefonoUno.get(), self.telefonoDos.get())
             insertarContacto(datos)
             self.limpiarDatos()
 
     def actualizar(self):
-        if  self.nombre.get() == "":
-            self.mostrarMensaje("Error", "Debes rellenar los datos ")
-        else:
-            modificarContacto(self.id_usuario,self.combo.current()+1,self.nombre.get(), self.apellido.get(), self.email.get(), self.telefonoUno.get(),self.telefonoDos.get())
-            self.mostrarMensaje("Modificacion", "Se han modificado los datos")
+        seleccion = self.tree.selection()
+        if seleccion:
+            id_categoria = self.tree.item(seleccion[0], 'values')[0]
+            id_usuario = self.tree.item(seleccion[0], 'values')[1]
+            datos = (id_usuario, id_categoria, self.nombre.get(), self.apellido.get(), self.email.get(), self.telefonoUno.get(), self.telefonoDos.get())
+            modificarContacto(datos)
+            self.mostrarMensaje("Modificación", "Se han modificado los datos")
             self.limpiarDatos()
+            self.cargarCategoria(None)
+        else:
+            self.mostrarMensaje("Error", "Seleccione un registro para actualizar")
 
     def borrar_registro(self):
-            borrarContacto(self.id_usuario,self.telefonoUno.get(),self.nombre.get())
+        seleccion = self.tree.selection()
+        if seleccion:
+            id_usuario = self.tree.item(seleccion[0], 'values')[1]
+            telefono_uno = self.tree.item(seleccion[0], 'values')[5]
+            borrarContacto(id_usuario, telefono_uno)
             self.mostrarMensaje("Borrar", "Se ha borrado el contacto")
             self.limpiarDatos()
+            self.cargarCategoria(None)
+        else:
+            self.mostrarMensaje("Error", "Seleccione un registro para borrar")
 
     def mostrar(self):
         listado = consultarFiltrar()
-        self.text.delete(1.0, END)
-        self.text.insert(INSERT, "ID\tNombre\tApellido\t\tTelefono\tEmail\n")
+        self.tree.delete(*self.tree.get_children())
         for elemento in listado:
             id_ = elemento[0]
             nombre_ = elemento[1]
             apellido_ = elemento[2]
             telefono_ = elemento[3]
             email_ = elemento[4]
-            self.text.insert(INSERT, id_)
-            self.text.insert(INSERT, "\t")
-            self.text.insert(INSERT, nombre_)
-            self.text.insert(INSERT, "\t")
-            self.text.insert(INSERT, apellido_)
-            self.text.insert(INSERT, "\t\t")
-            self.text.insert(INSERT, telefono_)
-            self.text.insert(INSERT, "\t")
-            self.text.insert(INSERT, email_)
-            self.text.insert(INSERT, "\n")
+            self.tree.insert("", "end", values=(id_, "", nombre_, apellido_, email_, telefono_, ""))

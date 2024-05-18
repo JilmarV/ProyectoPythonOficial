@@ -119,11 +119,10 @@ class agenda(Toplevel):
         #   metodo para cuando el suaurio cambie de seleccion cargarCategoria()
         
         
-        self.tree = ttk.Treeview(self.frame, columns=("categoria", "usuario", "nombres", "apellidos", "email", "telefono uno", "telefono dos"), show="headings")
+        self.tree = ttk.Treeview(self.frame, columns=("categoria", "nombres", "apellidos", "email", "telefono uno", "telefono dos"), show="headings")
 
         # Ajuste de las columnas
         self.tree.column("categoria", width=100)
-        self.tree.column("usuario", width=100)
         self.tree.column("nombres", width=150)
         self.tree.column("apellidos", width=150)
         self.tree.column("email", width=200)
@@ -132,7 +131,6 @@ class agenda(Toplevel):
 
         # Encabezados de las columnas
         self.tree.heading("categoria", text="Categoría")
-        self.tree.heading("usuario", text="Usuario")
         self.tree.heading("nombres", text="Nombres")
         self.tree.heading("apellidos", text="Apellidos")
         self.tree.heading("email", text="Email")
@@ -169,13 +167,12 @@ class agenda(Toplevel):
 
         for elemento in listado:
             id_categoria_ = elemento[0]
-            id_usuario_ = elemento[1]
             nombre_ = elemento[2]
             apellido_ = elemento[3]
             email_ = elemento[4]
             telefono_Uno = elemento[5]
             telefono_Dos = elemento[6]
-            self.tree.insert("", "end", values=(id_categoria_, id_usuario_, nombre_, apellido_, email_, telefono_Uno, telefono_Dos))
+            self.tree.insert("", "end", values=(id_categoria_, nombre_, apellido_, email_, telefono_Uno, telefono_Dos))
 
     def atras(self):
         self.destroy()

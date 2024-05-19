@@ -1,19 +1,25 @@
 from BD_conexionsql import Conexion
-
+from Excepciones.CorreoExistenteException import CorreoExistenteException
+from Excepciones.TelefonoExistenteException import TelefonoExistenteException
+from tkinter import messagebox
 # CRUD DEL CONTACTO
 def insertarContacto(datos):
-    conexion, cursor = Conexion.conectar()
-    sql = """
-    INSERT INTO contacto(id_categoria, id_usuario, nombre_contacto, apellido_contacto, email,telefonoUno,telefonoDos)
-    VALUES (?,?,?,?,?,?,?)
-    """
-    if cursor.execute(sql, datos):
-        print("Datos guardados")
-    else:
-        print("No se pudieron guardar los datos ")
-    conexion.commit()
-    conexion.close()
-
+    try:
+        conexion, cursor = Conexion.conectar()
+        validacionCorreoExistente(datos[4])
+        validacionTelefonoExistente(datos[5])
+        sql = """
+        INSERT INTO contacto(id_categoria, id_usuario, nombre_contacto, apellido_contacto, email,telefonoUno,telefonoDos)
+        VALUES (?,?,?,?,?,?,?)
+        """
+        if cursor.execute(sql, datos):
+            print("Datos guardados")
+        else:
+            print("No se pudieron guardar los datos ")
+        conexion.commit()
+        conexion.close()
+    except (CorreoExistenteException, TelefonoExistenteException) as e:
+        messagebox.showerror("Error", str(e))
 def consultarFiltrar(id_contacto,id_categoria):
     conexion, cursor = Conexion.conectar()
     sql = "SELECT id_categoria,id_contacto, nombre_contacto, apellido_contacto, telefono, email FROM contacto"
@@ -83,3 +89,19 @@ def obtenerContactosPorUsuarioYCategoria(id_usuario, id_categoria):
     conexion.close()
     return contactos
 
+def validacionCorreoExistente(correo):
+        conexion, cursor = Conexion.conectar()
+        sql = "SELECT * FROM contacto WHERE email = ?"
+        cursor.execute(sql, (correo,))
+        usuarioExiste = cursor.fetchone()
+        if usuarioExiste:
+            raise CorreoExistenteException()
+        conexion.close()
+def validacionTelefonoExistente(telefono):
+        conexion, cursor = Conexion.conectar()
+        sql = "SELECT * FROM contacto WHERE telefonoUno = ?"
+        cursor.execute(sql, (telefono,))
+        usuarioExiste = cursor.fetchone()
+        if usuarioExiste:
+            raise TelefonoExistenteException()
+        conexion.close()

@@ -13,7 +13,7 @@ class agenda(Toplevel):
         alto_pantalla = self.winfo_screenheight()
         
         # Dimensiones de la ventana
-        ancho_ventana = 1000
+        ancho_ventana = 900
         alto_ventana = 700
         
         x = (ancho_pantalla // 2) - (ancho_ventana // 2)
@@ -62,7 +62,7 @@ class agenda(Toplevel):
         
         self.cajaNombre = Entry(self.frame,
                                 textvariable=self.nombre)
-        self.cajaNombre.grid(row = 2, column = 1, columnspan = 3, padx = 10, sticky = "w")
+        self.cajaNombre.grid(row = 2, column = 1, columnspan = 1, padx = 10, sticky = "w")
         
         self.etiquetaApellido = Label(self.frame,
                                       text="Apellido:",
@@ -72,7 +72,7 @@ class agenda(Toplevel):
         
         self.cajaApellido = Entry(self.frame,
                                   textvariable=self.apellido)
-        self.cajaApellido.grid(row = 3, column = 1, columnspan = 3, padx = 10, sticky = "w")
+        self.cajaApellido.grid(row = 3, column = 1, columnspan = 1, padx = 10, sticky = "w")
         
         self.etiquetaTelefono = Label(self.frame,
                                       text="Telefono:",
@@ -82,7 +82,7 @@ class agenda(Toplevel):
         
         self.cajaTelefono = Entry(self.frame,
                                   textvariable=self.telefonoUno)
-        self.cajaTelefono.grid(row = 4, column = 1, columnspan = 3, padx = 10, sticky = "w")
+        self.cajaTelefono.grid(row = 4, column = 1, columnspan = 1, padx = 10, sticky = "w")
         
         self.label_telefonoDos = Label(self.frame,
                                                 text = "Telefono 2:",
@@ -92,7 +92,7 @@ class agenda(Toplevel):
         
         self.entry_telefonoDos = Entry(self.frame,
                                        textvariable=self.telefonoDos)
-        self.entry_telefonoDos.grid(row = 5, column = 1, columnspan = 3, padx = 10, sticky = "w")
+        self.entry_telefonoDos.grid(row = 5, column = 1, columnspan = 1, padx = 10, sticky = "w")
         
         self.etiquetaEmail = Label(self.frame,
                                    text="Email: ",
@@ -102,7 +102,7 @@ class agenda(Toplevel):
         
         self.cajaEmail = Entry(self.frame,
                                textvariable=self.email)
-        self.cajaEmail.grid(row = 6, column = 1, columnspan = 3, padx = 10, sticky = "w")
+        self.cajaEmail.grid(row = 6, column = 1, columnspan = 1, padx = 10, sticky = "w")
         
         self.etiquetaCombo = Label(self.frame,
                                    text="Categoría: ",
@@ -111,7 +111,7 @@ class agenda(Toplevel):
         self.etiquetaCombo.grid(row = 7, column = 0, padx = 10, sticky = "e")
         
         self.combo = ttk.Combobox(self.frame)
-        self.combo.grid(row = 7, column = 1, columnspan = 3, padx = 10, sticky = "w")
+        self.combo.grid(row = 7, column = 1, columnspan = 1, padx = 10, sticky = "w")
         
         listaCategoria =  consultarCategoria()
         self.combo['values'] = listaCategoria
@@ -123,11 +123,11 @@ class agenda(Toplevel):
 
         # Ajuste de las columnas
         self.tree.column("categoria", width=100)
-        self.tree.column("nombres", width=150)
-        self.tree.column("apellidos", width=150)
+        self.tree.column("nombres", width=100)
+        self.tree.column("apellidos", width=100)
         self.tree.column("email", width=200)
-        self.tree.column("telefono uno", width=100)
-        self.tree.column("telefono dos", width=100)
+        self.tree.column("telefono uno", width=150)
+        self.tree.column("telefono dos", width=150)
 
         # Encabezados de las columnas
         self.tree.heading("categoria", text="Categoría")
@@ -141,26 +141,51 @@ class agenda(Toplevel):
 
         self.combo.bind("<<ComboboxSelected>>", self.cargarCategoria)
         
-        botonAñadir = Button(self.frame, text="Añadir", command=self.guardarDatos, background=self.color_boton)
-        botonAñadir.place(x=200, y=600)
+        botonAñadir = Button(self.frame, text="Añadir", command=self.guardarDatos, background=self.color_boton, width=10)
+        botonAñadir.grid(row=9, column=0, columnspan=1, padx=10, pady=10)
         
-        botonBorrar = Button(self.frame, text="Borrar", command=self.borrar_registro, background=self.color_boton)
-        botonBorrar.place(x=250, y=600)
+        botonBorrar = Button(self.frame, text="Borrar", command=self.borrar_registro, background=self.color_boton, width=10)
+        botonBorrar.grid(row=9, column=1, columnspan=1, padx=10, pady=10)
         
-        botonConsultar = Button(self.frame, text="Consultar", command=self.mostrar, background=self.color_boton)
-        botonConsultar.place(x=300, y=600)
+        botonConsultar = Button(self.frame, text="Consultar", command=self.mostrar, background=self.color_boton, width=10)
+        botonConsultar.grid(row=10, column=1, columnspan=1, padx=10, pady=10)
         
-        botonModificar = Button(self.frame, text="Actualizar", command=self.actualizar, background=self.color_boton)
-        botonModificar.place(x=370, y=600)
+        botonModificar = Button(self.frame, text="Actualizar", command=self.actualizar, background=self.color_boton, width=10)
+        botonModificar.grid(row=10, column=0, columnspan=1, padx=10, pady=10)
         
         boton_atras = Button(self.frame,
                                           text = "Atras",
                                           background = self.color_boton_secundario,
-                                          command=self.atras)
-        boton_atras.place(x=500, y=600)
+                                          command=self.atras,
+                                          width=10)
+        boton_atras.grid(row=11, column=0, columnspan=1, padx=10, pady=10)
+        
+        boton_limpiar = Button(self.frame,
+                                          text = "Ver todos",
+                                          background = self.color_boton_secundario,
+                                          command=self.cargarCategoriaInicio,
+                                          width=10)
+        boton_limpiar.place(x=600, y=190)
+        
+        self.cargarCategoriaInicio()
         
     def cargarCategoria(self, event):
         listado = obtenerContactosPorUsuarioYCategoria(self.id_usuario, self.combo.current() + 1)
+
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        for elemento in listado:
+            id_categoria_ = elemento[0]
+            nombre_ = elemento[2]
+            apellido_ = elemento[3]
+            email_ = elemento[4]
+            telefono_Uno = elemento[5]
+            telefono_Dos = elemento[6]
+            self.tree.insert("", "end", values=(id_categoria_, nombre_, apellido_, email_, telefono_Uno, telefono_Dos))
+            
+    def cargarCategoriaInicio(self):
+        listado = obtenerContactosPorUsuario(self.id_usuario)
 
         for item in self.tree.get_children():
             self.tree.delete(item)

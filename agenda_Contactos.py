@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from BD_contactos import *
 from tkinter import ttk
+import re
 class agenda(Toplevel):
     def __init__(self,id, ventana_padre, *args, **kwargs):
         super().__init__(ventana_padre)
@@ -169,6 +170,16 @@ class agenda(Toplevel):
         
         self.cargarCategoriaInicio()
         
+        #----------------------------------------
+        #Parte llamado metodo velidacion meta caracteres
+        #--------------------------------------------
+        
+        self.cajaEmail.bind("<FocusOut>", self.validar_correo)
+        self.cajaTelefono.bind("<FocusOut>", self.validar_telefono)
+        self.entry_telefonoDos.bind("<FocusOut>", self.validar_telefono)
+        self.cajaNombre.bind("<FocusOut>", self.validar_nombre_apellido)
+        self.cajaApellido.bind("<FocusOut>", self.validar_nombre_apellido)
+        
     def cargarCategoria(self, event):
         listado = obtenerContactosPorUsuarioYCategoria(self.id_usuario, self.combo.current() + 1)
 
@@ -257,3 +268,24 @@ class agenda(Toplevel):
             telefono_ = elemento[3]
             email_ = elemento[4]
             self.tree.insert("", "end", values=(id_, "", nombre_, apellido_, email_, telefono_, ""))
+    
+    #----------------------------------
+    #         meta-caracteres
+    #----------------------------------
+    
+    def validar_correo(self, event):
+        correo = self.email.get()
+        patron = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(patron, correo):
+            messagebox.showerror("Error de validación", "El correo electrónico no es válido")
+            
+    def validar_telefono(self, event):
+        telefono = event.widget.get()
+        if not telefono.isdigit() or len(telefono) != 10:
+            messagebox.showerror("Error de validación", "El número de teléfono debe contener solo dígitos y tener 10 caracteres")
+            
+    def validar_nombre_apellido(self, event):
+        texto = event.widget.get()
+        patron = r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\'\-]+$'
+        if not re.match(patron, texto):
+            messagebox.showerror("Error de validación", "El campo solo puede contener letras y caracteres especiales")

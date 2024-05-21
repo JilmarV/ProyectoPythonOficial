@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox, ttk
 from BD_admin_usuario_sql import *
 from PIL import Image, ImageTk
-
+import re
 class ventana_admin(Toplevel):
     def __init__(self, ventana_padre, *args, **kwargs):
         super().__init__(ventana_padre)
@@ -197,6 +197,10 @@ class ventana_admin(Toplevel):
                                           command=self.atras)
         self.boton_atras.grid(row = 10, column = 1, columnspan = 3, pady = 10)
         
+        self.entry_nombre.bind("<FocusOut>", self.validar_nombre_apellido)
+        self.entry_apellido.bind("<FocusOut>", self.validar_nombre_apellido)
+        self.entry_correo_electronico.bind("<FocusOut>", self.validar_correo)
+        
     def limpiar(self):
         self.nombre.set("")
         self.apellido.set("")
@@ -271,3 +275,19 @@ class ventana_admin(Toplevel):
         self.correo.set(valores[3])
         self.contrasena.set(valores[4])
         self.direccion.set(valores[5])
+        
+    #----------------------------------
+    #         meta-caracteres
+    #----------------------------------
+    
+    def validar_correo(self, event):
+        correo = self.correo.get()
+        patron = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(patron, correo):
+            messagebox.showerror("Error de validación", "El correo electrónico no es válido")
+
+    def validar_nombre_apellido(self, event):
+        texto = event.widget.get()
+        patron = r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\'\-]+$'
+        if not re.match(patron, texto):
+            messagebox.showerror("Error de validación", "El campo solo puede contener letras y caracteres especiales")

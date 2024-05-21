@@ -15,7 +15,7 @@ class agenda(Toplevel):
         
         # Dimensiones de la ventana
         ancho_ventana = 900
-        alto_ventana = 700
+        alto_ventana = 650
         
         x = (ancho_pantalla // 2) - (ancho_ventana // 2)
         y = (alto_pantalla // 2) - (alto_ventana // 2)
@@ -119,7 +119,6 @@ class agenda(Toplevel):
         self.combo.current(0)
         #   metodo para cuando el suaurio cambie de seleccion cargarCategoria()
         
-        
         self.tree = ttk.Treeview(self.frame, columns=("categoria", "nombres", "apellidos", "email", "telefono uno", "telefono dos"), show="headings")
 
         # Ajuste de las columnas
@@ -142,16 +141,32 @@ class agenda(Toplevel):
 
         self.combo.bind("<<ComboboxSelected>>", self.cargarCategoria)
         
-        botonAñadir = Button(self.frame, text="Añadir", command=self.guardarDatos, background=self.color_boton, width=10)
+        botonAñadir = Button(self.frame,
+                             text="Añadir",
+                             command=self.guardarDatos,
+                             background=self.color_boton,
+                             width=10)
         botonAñadir.grid(row=9, column=0, columnspan=1, padx=10, pady=10)
         
-        botonBorrar = Button(self.frame, text="Borrar", command=self.borrar_registro, background=self.color_boton, width=10)
+        botonBorrar = Button(self.frame,
+                             text="Borrar",
+                             command=self.borrar_registro_seleccionado,
+                             background=self.color_boton,
+                             width=10)
         botonBorrar.grid(row=9, column=1, columnspan=1, padx=10, pady=10)
         
-        botonConsultar = Button(self.frame, text="Consultar", command=self.mostrar, background=self.color_boton, width=10)
+        botonConsultar = Button(self.frame,
+                                text="Consultar",
+                                command=self.cargar_datos_seleccionados,
+                                background=self.color_boton,
+                                width=10)
         botonConsultar.grid(row=10, column=1, columnspan=1, padx=10, pady=10)
         
-        botonModificar = Button(self.frame, text="Actualizar", command=self.actualizar, background=self.color_boton, width=10)
+        botonModificar = Button(self.frame,
+                                text="Actualizar",
+                                command=self.modificar_contacto,
+                                background=self.color_boton,
+                                width=10)
         botonModificar.grid(row=10, column=0, columnspan=1, padx=10, pady=10)
         
         boton_atras = Button(self.frame,
@@ -231,32 +246,8 @@ class agenda(Toplevel):
         else:
             datos = (self.combo.current() + 1, self.id_usuario, self.nombre.get(), self.apellido.get(), self.email.get(), self.telefonoUno.get(), self.telefonoDos.get())
             insertarContacto(datos)
+            self.cargarCategoriaInicio()
             self.limpiarDatos()
-
-    def actualizar(self):
-        seleccion = self.tree.selection()
-        if seleccion:
-            id_categoria = self.tree.item(seleccion[0], 'values')[0]
-            id_usuario = self.tree.item(seleccion[0], 'values')[1]
-            datos = (id_usuario, id_categoria, self.nombre.get(), self.apellido.get(), self.email.get(), self.telefonoUno.get(), self.telefonoDos.get())
-            modificarContacto(datos)
-            self.mostrarMensaje("Modificación", "Se han modificado los datos")
-            self.limpiarDatos()
-            self.cargarCategoria(None)
-        else:
-            self.mostrarMensaje("Error", "Seleccione un registro para actualizar")
-
-    def borrar_registro(self):
-        seleccion = self.tree.selection()
-        if seleccion:
-            id_usuario = self.tree.item(seleccion[0], 'values')[1]
-            telefono_uno = self.tree.item(seleccion[0], 'values')[5]
-            borrarContacto(id_usuario, telefono_uno)
-            self.mostrarMensaje("Borrar", "Se ha borrado el contacto")
-            self.limpiarDatos()
-            self.cargarCategoria(None)
-        else:
-            self.mostrarMensaje("Error", "Seleccione un registro para borrar")
 
     def mostrar(self):
         listado = consultarFiltrar()
@@ -269,6 +260,63 @@ class agenda(Toplevel):
             email_ = elemento[4]
             self.tree.insert("", "end", values=(id_, "", nombre_, apellido_, email_, telefono_, ""))
     
+    def cargar_datos_seleccionados(self):
+        seleccion = self.tree.selection()
+
+        if seleccion:
+            valores = self.tree.item(seleccion[0], 'values')
+            
+            self.nombre.set(valores[1])
+            self.apellido.set(valores[2])
+            self.email.set(valores[3])
+            self.telefonoUno.set(valores[4])
+            self.telefonoDos.set(valores[5])
+            id_categoria = valores[0]
+            if id_categoria in self.combo['values']:
+                self.combo.current(self.combo['values'].index(id_categoria))
+            else:
+                self.combo.current(0)
+        else:
+            messagebox.showinfo("Información", "Por favor, seleccione una fila para cargar los datos")
+            
+    def borrar_registro_seleccionado(self):
+        seleccion = self.tree.selection()
+        
+        if seleccion:
+            id_usuario = self.id_usuario
+            telefono_uno = self.tree.item(seleccion[0], 'values')[4]
+            nombre = self.tree.item(seleccion[0], 'values')[1]
+            
+            borrarContacto(id_usuario, telefono_uno, nombre)
+            
+            messagebox.showinfo("Borrar", "Se ha borrado el contacto")
+            
+            self.limpiarDatos()
+            self.cargarCategoriaInicio()
+        else:
+            messagebox.showinfo("Información", "Por favor, seleccione una fila para borrar el contacto")
+    
+    def modificar_contacto(self):
+        seleccion = self.tree.selection()
+        
+        if seleccion:
+            id_usuario = self.id_usuario
+            categoria = self.combo.current() + 1 
+            nombre = self.nombre.get()
+            apellido = self.apellido.get()
+            telefonoUno = self.telefonoUno.get()
+            telefonoDos = self.telefonoDos.get()
+            email = self.email.get()
+            
+            modificarContacto(id_usuario, categoria, nombre, apellido, telefonoUno, telefonoDos, email)
+            
+            messagebox.showinfo("Modificación", "Se han modificado los datos")
+            
+            self.limpiarDatos()
+            self.cargarCategoria(None)
+        else:
+            messagebox.showinfo("Información", "Por favor, seleccione una fila para modificar el contacto")
+
     #----------------------------------
     #         meta-caracteres
     #----------------------------------

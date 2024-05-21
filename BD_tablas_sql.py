@@ -103,7 +103,7 @@ def BORRAR():
 #BORRAR()
 def llenarCategorias():
     # Lista de categorías en el orden especificado
-    categorias = ["Todos", "Favoritos", "Amigos", "Trabajo", "Familia", "Otros"]
+    categorias = ["Favoritos", "Amigos", "Trabajo", "Familia", "Otros"]
     
     # Conexión a la base de datos
     conexion, cursor = Conexion.conectar()
@@ -125,4 +125,4 @@ def llenarCategorias():
         conexion.close()
 
 # Llamada a la función para insertar las categorías
-llenarCategorias()
+#llenarCategorias()
